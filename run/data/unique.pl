@@ -8,10 +8,11 @@ my %hashset;
 while(<STDIN>)
 {
     chomp;
-    $hashset{$_} = 1;
+    s/^topic:\d+ //;
+    $hashset{$_} += 1;
 }
 
 foreach my $key (keys %hashset)
 {
-    print "$key\n";
+    print "$key $hashset{$key}\n";
 }

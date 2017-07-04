@@ -16,8 +16,14 @@ def pp(pp, name):
     return '%s_%s' % (pp, name)
 
 #load parameters of the model
-def load_params(path, params, with_previs=''):
+def load_params(path, params, with_prefix=''):
     pp = numpy.load(path)
+    new_params = OrderedDict()
+    for kk, vv in params.iteritems():
+        if kk not in pp:
+            continue
+        new_params[with_prefix+kk] = pp[kk]
+    params.update(new_params)
     return params
 
 # load parameters of the optimizer
@@ -32,6 +38,12 @@ def init_theano_params(params):
     for kk, pp in params.iteritems():
         tparams[kk] = theano.shared(params[kk], name=kk)
     return tparams
+
+def tanh(x):
+    return tensor.tanh(x)
+
+def linear(x):
+    return x
 
 def concatenate(tensor_list, axis=0):
     """
@@ -77,3 +89,11 @@ def concatenate(tensor_list, axis=0):
 
     return out
 
+
+# return name of word embedding for factor i
+# special handling of factor 0 for backward compatibility
+def embedding_name(i):
+    if i == 0:
+        return 'Wemb'
+    else:
+        return 'Wemb' + str(i)

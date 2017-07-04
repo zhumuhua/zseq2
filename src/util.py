@@ -18,3 +18,14 @@ def load_dict(filename):
         with open(filename, 'rb') as f:
             return pkl.load(f)
 
+def load_config(basename):
+    try:
+        with open('%s.json' % basename, 'rb') as f:
+            return json.load(f)
+    except:
+        try:
+            with open('%s.pkl' % basename, 'rb') as f:
+                return pkl.load(f)
+        except:
+            sys.stderr.write('Error: config file {}.json is missing'.format(basename))
+            sys.exit(1)
